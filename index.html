@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Translate to Russian</title>
+  <style>
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="inputText">translate : brother to rus :</label>
+    <input type="text" id="inputText">
+    <button id="answerButton" onclick="checkAnswer()">Answer</button>
+  </div>
+  <div id="result" class="result"></div>
+
+  <footer>
+    <div id="scoreDisplay">Score: 0/50</div>
+  </footer>
+
+  <script>
+    let score = 0;
+    const maxScore = 50;
+
+    function checkAnswer() {
+      const input = document.getElementById("inputText").value.trim();
+      const result = document.getElementById("result");
+      const scoreDisplay = document.getElementById("scoreDisplay");
+
+      if (input === "брат") {
+        result.textContent = "Correct";
+        result.className = "result correct";
+
+        if (score < maxScore) {
+          score++;
+          scoreDisplay.textContent = `Score: ${score}/${maxScore}`;
+        }
+      } else {
+        result.textContent = "Incorrect. The correct answer is: брат";
+        result.className = "result incorrect";
+      }
+    }
+
+    // Activer la touche Enter
+    document.getElementById("inputText").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        checkAnswer();
+      }
+    });
+  </script>
+</body>
+</html>
