@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENG - RUS Dictionary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Translation Practice ENG - RUS</h1>
+        <div class="exercise">
+            <p>Translate this image to Russian:</p>
+            <img id="wordImage" src="" alt="Word to translate">
+            <div class="audio-controls">
+                <button id="playAudio" onclick="playPronunciation()">🔊 Play</button>
+            </div>
+            <input type="text" id="russianInput" placeholder="Type Russian cyrillic...">
+            <button onclick="checkTranslation()">Submit</button>
+            <div id="result"></div>
+            <button onclick="nextWord()" id="nextBtn" style="display:none;">Next Word</button>
+        </div>
+        <div class="footPage">
+            <span id="scoreDisplay">0/1</span>
+            <div class="version">ver 1 oct 2025</div>
+        </div>
+    </div>
+    <script src="dictionary.js"></script>
+    <script>
+        let currentWordNumber = 1;
+        let correctAnswers = 0;
+        const totalWords = wordCount;
+        
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `${correctAnswers}/${totalWords}`;
+        }
+        
+        function displayCurrentWord() {
+            const wordObj = dictionary[currentWordNumber];
+            document.getElementById('wordImage').src = wordObj.image;
+            document.getElementById('wordImage').alt = wordObj.english;
+            document.getElementById('russianInput').value = '';
+            document.getElementById('result').textContent = '';
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+        
+        function playPronunciation() {
+            const wordObj = dictionary[currentWordNumber];
+            const audio = new Audio(wordObj.mp3);
+            audio.play().catch(error => {
+                console.log('Error playing audio:', error);
+            });
+        }
+        
+        function checkTranslation() {
+            const wordObj = dictionary[currentWordNumber];
+            const userInput = document.getElementById('russianInput').value.trim();
+            const correctTranslation = wordObj.russian;
+            const englishWord = wordObj.english;
+            const resultDiv = document.getElementById('result');
+            
+            if (userInput === correctTranslation) {
+                correctAnswers++;
+                resultDiv.textContent = '✅ Correct! Well done!';
+                resultDiv.style.color = '#28a745';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+                updateScore();
+            } else {
+                resultDiv.textContent = `❌ Incorrect. The correct answer is: ${correctTranslation} (${englishWord})`;
+                resultDiv.style.color = '#dc3545';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+        }
+        
+        function nextWord() {
+            currentWordNumber = currentWordNumber < totalWords ? currentWordNumber + 1 : 1;
+            if (currentWordNumber === 1) {
+                // Reset score when starting over
+                correctAnswers = 0;
+                updateScore();
+            }
+            displayCurrentWord();
+        }
+        
+        // Initialize first word on page load
+        window.onload = function() {
+            displayCurrentWord();
+            updateScore();
+            
+            // Add Enter key listener to input field
+            document.getElementById('russianInput').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    checkTranslation();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
